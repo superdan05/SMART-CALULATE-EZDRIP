@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+    <link rel="icon" href="https://img2.pic.in.th/pic/IMG_35598dcf9744f50d0c37.jpeg" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>คำนวณอัตราสารน้ำ</title>
@@ -172,7 +173,7 @@
             let hours = parseFloat(eval(document.getElementById("hours").value)) || 0;
             let minutes = parseFloat(eval(document.getElementById("minutes").value)) || 0;
 
-            let totalHours = hours + (minutes / 60);
+            let totalHours = (hours + (minutes / 60)).toFixed(2);
 
             // เมื่อไม่มีค่า Volume
             if (!volume && rate > 0 && totalHours > 0) {
