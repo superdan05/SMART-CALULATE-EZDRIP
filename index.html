@@ -1,3 +1,5 @@
+แก้ล่าสุด 04/04
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -5,6 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="MyWebSite" />
 <link rel="manifest" href="/site.webmanifest" />
 
     <meta charset="UTF-8">
@@ -103,8 +106,9 @@
             #printArea {
                 display: block;
                 font-size: 18px;
-            }
-        }
+          }
+      }
+     
     </style>
 </head>
 <body>
@@ -140,11 +144,18 @@
       
         <input id="customFluid" class="hidden" type="text" placeholder="ระบุสารน้ำ">
       
-          <label>วันที่ให้สารน้ำ:</label>
-        <input type="date" id="date">
+          <label>จำนวนรอบที่ให้สารน้ำ:</label>
+        <input type="text" id="cycles" placeholder="พิมพ์จำนวนรอบเช่น 8, 6">
 
         <label>เวลาที่ให้สารน้ำ:</label>
-        <input type="time" id="time">
+             <select id="TimeRound" onchange="toggleCustomTime()">
+            <option value="6-12-18-22">6-12-18-22</option>
+            <option value="2-6-10-14-18-22">2-6-10-14-18-22</option>
+            <option value="3-6-9-12-15-18-21-24">3-6-9-12-15-18-21-24</option>
+            <option value="customTime">ระบุเพิ่ม</option>
+        </select>
+            
+      <input id="customTimeRound" class="hidden" type="text" placeholder="พิมพ์เวลาที่ให้เช่น 3-6-9-12-15-18-21-24">
 
         <label>ชื่อผู้จัด:</label>
         <input type="text" id="organizer" placeholder="พิมพ์ชื่อ">
@@ -163,6 +174,11 @@
             let fluidType = document.getElementById("fluidType").value;
             document.getElementById("customFluid").classList.toggle("hidden", fluidType !== "custom");
         }
+      
+      function toggleCustomTime() {
+            let TimeRound = document.getElementById("TimeRound").value;
+            document.getElementById("customTimeRound").classList.toggle("hidden", TimeRound !== "customTime");
+        }
 
         function clearResult() {
             // เคลียร์ผลลัพธ์เมื่อมีการกรอกข้อมูลใหม่
@@ -178,7 +194,7 @@
             let hours = parseFloat(eval(document.getElementById("hours").value)) || 0;
             let minutes = parseFloat(eval(document.getElementById("minutes").value)) || 0;
 
-            let totalHours = (hours + (minutes / 60)).toFixed(2);
+            let totalHours = (hours + (minutes / 60));
 
             // เมื่อไม่มีค่า Volume
             if (!volume && rate > 0 && totalHours > 0) {
@@ -204,15 +220,17 @@
         }
 
         function resetForm() {
-            document.getElementById("fluidType").value = "SF";
+            document.getElementById("fluidType").value = "";
             document.getElementById("customFluid").classList.add("hidden");
             document.getElementById("customFluid").value = "";
             document.getElementById("volume").value = "";
             document.getElementById("hours").value = "";
             document.getElementById("minutes").value = "";
             document.getElementById("rate").value = "";
-	    document.getElementById("date").value = "";
-   	    document.getElementById("time").value = "";
+	          document.getElementById("cycles").value = "";
+            document.getElementById("TimeRound").value = "";
+            document.getElementById("customTimeRound").classList.add("hidden");
+            document.getElementById("customTimeRound").value = "";
             document.getElementById("organizer").value = "";
             document.getElementById("checker").value = "";
 
@@ -229,30 +247,27 @@
             let minutes = document.getElementById("minutes").value;
             let fluidType = document.getElementById("fluidType").value;
             let customFluid = document.getElementById("customFluid").value;
-
+          
             let fluidName = (fluidType === "custom" ? customFluid : fluidType);
           
-           let organizer = document.getElementById("organizer").value || "ไม่ระบุ";
+            let cycles = document.getElementById("cycles").value || "ไม่ระบุ";  
+            let organizer = document.getElementById("organizer").value || "ไม่ระบุ";
+            let checker = document.getElementById("checker").value || "ไม่ระบุ";
+            let TimeRound = document.getElementById("TimeRound").value;
+            let customTimeRound = document.getElementById("customTimeRound").value;
           
-    let checker = document.getElementById("checker").value || "ไม่ระบุ";
-          
-    let date = document.getElementById("date").value || "ไม่ระบุ";
-          
-    let time = document.getElementById("time").value || "ไม่ระบุ";
-          
-    let dateTime = `${date} ${time}`;
+            let Timeja = (TimeRound === "customTime" ? customTimeRound : TimeRound);
 
             let printArea = document.getElementById("printArea");
-            printArea.innerHTML = `<h2>ใบกำกับสารน้ำ</h2>
-                                   <p>สารน้ำ: ${fluidName}</p>
-                                   <p>Volume: ${volume} ml</p>
-                                   <p>Rate: ${rate} ml/h</p>
- 
-      <p>Date/Time of administer: ${dateTime}</p>
-      
-        <p>Prepared: ${organizer}</p>
-        
-        <p>Double check by: ${checker}</p>`;
+            
+            printArea.innerHTML = ` <h2> ${fluidName} volume ${volume} ml x ${cycles} feeds </h2>
+          
+                                   <p> Drip in ${hours} hr ${minutes} min &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rate: ${rate} ml/h</p>
+          
+                                   <p>เวลา ${Timeja} น.</p>
+          
+        <p style="font-size:10px"> Prepared: ${organizer} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; , Double check by: ${checker} </p> `;
+          
             printArea.classList.remove("hidden");
 
             let printWindow = window.open('', '', 'height=500,width=600');
